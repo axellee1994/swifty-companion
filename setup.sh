@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH="$PATH:$HOME/development/flutter/bin"
 
 # 1. Regenerate platform folders
 flutter create .

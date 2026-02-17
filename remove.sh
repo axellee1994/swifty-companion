@@ -12,5 +12,8 @@ rm -f *.iml
 rm -rf pubspec.lock
 rm -rf analysis_options.yaml
 rm -rf .metadata
+rm -rf .dart_tool
+rm -rf build
+rm -rf .flutter-plugins-dependencies
 
 echo "Cleaned up 🧹!"
