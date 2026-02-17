@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../providers/user_provider.dart';
 import '../widgets/profile_page.dart';
 import '../widgets/level_bar.dart';
@@ -17,6 +18,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
+    final profileImageUrl = userProvider.getProfileImage();
 
     return Scaffold(
       appBar: AppBar(title: const Text("42 Swifty Companion")),
@@ -40,7 +42,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ? null 
                   : () => userProvider.fetchUser(_controller.text.trim()),
                 child: userProvider.isLoading 
-                  ? const CircularProgressIndicator() 
+                  ? CircularProgressIndicator(color: Theme.of(context).primaryColor) 
                   : const Text("Search User"),
               ),
               const SizedBox(height: 40),
@@ -50,7 +52,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage(userProvider.userData!['image']['link'] ?? ''),
+                      backgroundColor: Colors.grey[800],
+                      backgroundImage: profileImageUrl.isNotEmpty 
+                          ? CachedNetworkImageProvider(profileImageUrl) 
+                          : null,
+                      child: profileImageUrl.isEmpty 
+                          ? const Icon(Icons.person, size: 50) 
+                          : null,
                     ),
                     const SizedBox(height: 10),
                     Text(
@@ -58,16 +66,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
-                    // Use the helper method from UserProvider to get the Core level
                     LevelBar(level: userProvider.getCoreLevel()),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProfilePage(),
-                          ),
+                          MaterialPageRoute(builder: (context) => const ProfilePage()),
                         );
                       },
                       child: const Text("View Full Profile"),

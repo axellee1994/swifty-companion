@@ -17,8 +17,8 @@ class LevelBar extends StatelessWidget {
             LinearProgressIndicator(
               value: progress,
               minHeight: 25,
-              backgroundColor: Colors.grey[800],
-              color: const Color(0xFF00BABC),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).primaryColor,
             ),
             Text(
               "Level ${level.toStringAsFixed(2)}",

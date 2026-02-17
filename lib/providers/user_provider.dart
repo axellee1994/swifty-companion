@@ -18,15 +18,33 @@ class UserProvider extends ChangeNotifier {
       final response = await dio.get('/v2/users/$login');
 
       userData = response.data;
-      print("✅ Found User: ${userData!['displayname']}");
       
     } catch (e) {
       errorMessage = "User not found or API error";
-      print("❌ Error fetching user: $e");
     } finally {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  /// Validates and returns a proper image URL, handling relative paths and empty links
+  String getProfileImage() {
+    if (userData == null || userData!['image'] == null) return '';
+    
+    final image = userData!['image'];
+    final String? link = image['link'];
+
+    // Check if link is null, empty, or just whitespace
+    if (link == null || link.trim().isEmpty) {
+      return '';
+    }
+
+    // Ensure it has a valid host; some staff accounts return relative paths
+    if (!link.startsWith('http')) {
+      return 'https://profile.intra.42.fr$link';
+    }
+
+    return link;
   }
 
   /// Helper to find the Common Core (cursus_id: 21) level
@@ -35,7 +53,7 @@ class UserProvider extends ChangeNotifier {
     
     final List<dynamic> cursusList = userData!['cursus_users'];
     
-    // Search for cursus_id 21, which is the standard ID for 42cursus (Common Core)
+    // Search for cursus_id 21 (Common Core) or fallback to latest
     final coreCursus = cursusList.firstWhere(
       (c) => c['cursus_id'] == 21,
       orElse: () => cursusList.isNotEmpty ? cursusList.last : null,
@@ -46,7 +64,7 @@ class UserProvider extends ChangeNotifier {
     return (coreCursus['level'] as num).toDouble();
   }
 
-  /// NEW: Helper to get specific cursus data (Level, Grade, etc.)
+  /// Helper to get specific cursus data (Level, Grade, etc.)
   Map<String, dynamic>? getCursusData(int id) {
     if (userData == null || userData!['cursus_users'] == null) return null;
     final List<dynamic> cursus = userData!['cursus_users'];
@@ -58,12 +76,11 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  /// NEW: Helper to filter projects belonging to a specific cursus
+  /// Helper to filter projects belonging to a specific cursus
   List<dynamic> getProjectsByCursus(int cursusId) {
     if (userData == null || userData!['projects_users'] == null) return [];
     final List<dynamic> allProjects = userData!['projects_users'];
     
-    // Filter projects that belong to the specific cursus ID
     return allProjects.where((p) {
       final List<dynamic> cursusIds = p['cursus_ids'] ?? [];
       return cursusIds.contains(cursusId);
