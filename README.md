@@ -66,6 +66,8 @@ chmod +x test_bonus.sh
 ./test_bonus.sh
 ```
 
+The script will temporarily sabotage the local token to force a 401 error, allowing the evaluator to observe the automatic recovery in the terminal logs.
+
 ---
 
 ### 🧹 Maintenance
