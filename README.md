@@ -1,10 +1,10 @@
-# 📱 Swifty Companion
+# Swifty Companion
 
 A mobile application developed as part of the 42 Network curriculum. This project introduces mobile development by creating an app that interfaces with the **42 Intra API** to retrieve and display student information in a user-friendly interface.
 
 ---
 
-## 🚀 Overview
+## Overview
 
 **Swifty Companion** allows users to search for any student in the 42 network by their login. It provides a detailed view of their progress, skills, and projects, effectively acting as a mobile companion to the Intra.
 
@@ -20,7 +20,7 @@ A mobile application developed as part of the 42 Network curriculum. This projec
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 * **Framework**: [Flutter](https://flutter.dev/) (Dart).
 * **Networking**: [Dio](https://pub.dev/packages/dio) with interceptors for OAuth2.
@@ -31,7 +31,7 @@ A mobile application developed as part of the 42 Network curriculum. This projec
 
 ---
 
-## ⚙️ Setup & Installation
+## Setup & Installation
 
 ### Prerequisites
 * Flutter SDK (v3.0.0+).
@@ -57,7 +57,7 @@ flutter run -d linux
 
 ---
 
-## 🧪 Testing the Bonus (Token Refresh)
+## Bonus (Token Refresh)
 This project implements the **Automatic Token Refresh** bonus. If an OAuth2 token expires (returns a 401 error), the app automatically re-authenticates in the background and retries the original request seamlessly.
 
 To test this functionality, use the included test script
@@ -70,7 +70,7 @@ The script will temporarily sabotage the local token to force a 401 error, allow
 
 ---
 
-### 🧹 Maintenance
+### Maintenance
 To completely reset the project environment and remove all platform-specific generated files:
 ```
 chmod +x remove.sh
