@@ -6,6 +6,7 @@ import 'providers/auth_provider.dart';
 
 // Turn main into an async function
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
 
   DioHandler.setup();
