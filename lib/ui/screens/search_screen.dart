@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
+import '../widgets/profile_page.dart';
+import '../widgets/level_bar.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -20,7 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: AppBar(title: const Text("42 Swifty Companion")),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView( // Added scroll just in case
+        child: SingleChildScrollView(
           child: Column(
             children: [
               TextField(
@@ -55,23 +57,28 @@ class _SearchScreenState extends State<SearchScreen> {
                       userProvider.userData!['displayname'] ?? "No Name",
                       style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    Text("Level: ${userProvider.userData!['cursus_users'][0]['level']}"),
-                    onPressed: () async {
-                        await userProvider.fetchUser(_controller.text.trim());
-                        if (userProvider.userData != null && mounted) {
-                            // Navigate to the profile page once data is ready
-                            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ProfilePage(), // Ensure this class name matches your file
-                            ),
-                            );
-                        }
-                        },
+                    const SizedBox(height: 10),
+                    // Use the helper method from UserProvider to get the Core level
+                    LevelBar(level: userProvider.getCoreLevel()),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfilePage(),
+                          ),
+                        );
+                      },
+                      child: const Text("View Full Profile"),
+                    ),
                   ],
                 )
               else if (userProvider.errorMessage != null)
-                Text(userProvider.errorMessage!, style: const TextStyle(color: Colors.red)),
+                Text(
+                  userProvider.errorMessage!, 
+                  style: const TextStyle(color: Colors.red),
+                ),
             ],
           ),
         ),

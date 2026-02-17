@@ -1,4 +1,8 @@
 #!/bin/bash
+export PATH="$PATH:$HOME/development/flutter/bin"
+
+# Clean flutter
+flutter clean
 
 # Remove platform-specific folders
 rm -rf android ios linux macos web windows
