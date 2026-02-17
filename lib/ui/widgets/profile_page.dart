@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
 import 'level_bar.dart';
+import 'skills_chip.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -44,6 +45,7 @@ class ProfilePage extends StatelessWidget {
   Widget _buildCursusView(BuildContext context, UserProvider provider, int cursusId) {
     final cursus = provider.getCursusData(cursusId);
     final projects = provider.getProjectsByCursus(cursusId);
+    final List<dynamic> skills = cursus?['skills'] ?? [];
 
     if (cursus == null) {
       return const Center(child: Text("No data found for this cursus"));
@@ -53,15 +55,41 @@ class ProfilePage extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          // Use the LevelBar class widget
+          // 1. Level Representation
           LevelBar(level: (cursus['level'] as num).toDouble()),
-          const Divider(height: 40),
-          const Text(
-            "Projects",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          const SizedBox(height: 20),
+          
+          // 2. Neat Skills Section
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: ExpansionTile(
+              leading: const Icon(Icons.bolt, color: Color(0xFF00BABC)),
+              title: const Text("Skills", style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text("${skills.length} skills acquired"),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SkillList(skills: skills),
+                ),
+              ],
+            ),
           ),
+          
           const SizedBox(height: 10),
-          ProjectList(projects: projects),
+          
+          // 3. Neat Projects Section
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: ExpansionTile(
+              leading: const Icon(Icons.assignment, color: Color(0xFF00BABC)),
+              title: const Text("Projects", style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text("${projects.length} projects recorded"),
+              initiallyExpanded: true, // Show projects by default
+              children: [
+                ProjectList(projects: projects),
+              ],
+            ),
+          ),
         ],
       ),
     );
