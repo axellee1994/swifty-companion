@@ -18,7 +18,7 @@ class DioHandler {
         ) {
     
     dio.interceptors.add(
-      InterceptorsWrapper(
+      QueuedInterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await _storage.read(key: 'access_token');
           if (token != null) {
@@ -33,7 +33,7 @@ class DioHandler {
             print("🚨 Token expired! Attempting to refresh...");
             
             try {
-              final authProvider = AuthProvider();
+              final authProvider = GetIt.instance<AuthProvider>();
               await authProvider.authenticate();
               
               final newToken = await _storage.read(key: 'access_token');

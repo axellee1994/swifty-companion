@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 import 'core/services/dio_handler.dart';
 import 'core/constants/constants.dart';
 import 'providers/auth_provider.dart';
@@ -35,11 +36,14 @@ Future<void> main() async {
     return;
   }
 
+  final getIt = GetIt.instance; 
+  getIt.registerLazySingleton(() => AuthProvider());
+  
   // Initialize Dio singleton
   DioHandler.setup();
 
-  final authProvider = AuthProvider();
-  
+  final authProvider = getIt<AuthProvider>();
+
   // Attempt initial authentication
   try {
     await authProvider.authenticate();
